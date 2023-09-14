@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        /* Add your CSS styling here */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .heart {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    <div id="cart">
+        <!-- Sample cart items -->
+        <div class="cart-item">
+            <span>Item 1</span>
+            <button class="quantity-btn">+</button>
+            <span class="quantity">1</span>
+            <button class="quantity-btn">-</button>
+            <button class="delete-btn">Delete</button>
+            <span class="price">$10</span>
+            <span class="heart">❤️</span>
+        </div>
+        <div class="cart-item">
+            <span>Item 2</span>
+            <button class="quantity-btn">+</button>
+            <span class="quantity">1</span>
+            <button class="quantity-btn">-</button>
+            <button class="delete-btn">Delete</button>
+            <span class="price">$15</span>
+            <span class="heart">❤️</span>
+        </div>
+    </div>
+    <div id="total">Total: $<span id="total-amount">25</span></div>
+
+    <script>
+        // JavaScript functionality
+        const cart = document.getElementById('cart');
+        const totalAmount = document.getElementById('total-amount');
+
+        // Attach event listeners to buttons in cart items
+        cart.addEventListener('click', function (e) {
+            if (e.target.classList.contains('quantity-btn')) {
+                const quantityElement = e.target.parentElement.querySelector('.quantity');
+                const priceElement = e.target.parentElement.querySelector('.price');
+                const price = parseInt(priceElement.innerText.slice(1));
+                let quantity = parseInt(quantityElement.innerText);
+
+                if (e.target.innerText === '+') {
+                    quantity++;
+                } else if (e.target.innerText === '-' && quantity > 1) {
+                    quantity--;
+                }
+
+                quantityElement.innerText = quantity;
+                priceElement.innerText = `$${price * quantity}`;
+
+                updateTotal();
+            } else if (e.target.classList.contains('delete-btn')) {
+                e.target.parentElement.remove();
+                updateTotal();
+            } else if (e.target.classList.contains('heart')) {
+                e.target.classList.toggle('liked');
+            }
+        });
+
+        // Function to update the total price
+        function updateTotal() {
+            const prices = Array.from(cart.querySelectorAll('.price')).map(priceElement => {
+                return parseInt(priceElement.innerText.slice(1));
+            });
+
+            const total = prices.reduce((acc, curr) => acc + curr, 0);
+            totalAmount.innerText = total;
+        }
+    </script>
+</body>
+</html>
